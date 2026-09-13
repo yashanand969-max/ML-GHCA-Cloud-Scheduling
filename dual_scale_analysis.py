@@ -192,14 +192,14 @@ def analyze_regime_comparison():
 
         for comp_name, x, y in comparisons:
             diff = x - y
-            w_norm, p_norm = stats.shapiro(diff)
+            _, p_norm = stats.shapiro(diff)
             wins = int(np.sum(diff > 0))
             ties = int(np.sum(diff == 0))
             losses = int(np.sum(diff < 0))
 
             try:
                 w_stat, p_val = stats.wilcoxon(x, y, alternative="greater")
-            except Exception as e:
+            except Exception:
                 w_stat, p_val = np.nan, np.nan
 
             r_rb = rank_biserial_correlation(x, y)

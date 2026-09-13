@@ -37,6 +37,7 @@ def load_results():
             )
 
         problems = []
+        jobs, ops_count = [], []
         baseline_oct, ghca_oct, heur_oct, ml_oct = [], [], [], []
         baseline_lb, ghca_lb, heur_lb, ml_lb = [], [], [], []
         baseline_cost, ghca_cost, heur_cost, ml_cost = [], [], [], []
@@ -44,6 +45,8 @@ def load_results():
 
         for row in reader:
             problems.append(row["Problem"])
+            jobs.append(int(row["Jobs"]))
+            ops_count.append(int(row["Ops"]))
             baseline_oct.append(float(row["Baseline_OCT"]))
             ghca_oct.append(float(row["GHCA_OCT"]))
             heur_oct.append(float(row["Heuristic_OCT"]))
@@ -60,7 +63,7 @@ def load_results():
             pct_vs_ghca.append(float(row["Pct_Improvement_vs_GHCA"]))
             pct_vs_heuristic.append(float(row["Pct_Improvement_vs_Heuristic"]))
 
-    return (problems,
+    return (problems, jobs, ops_count,
             baseline_oct, ghca_oct, heur_oct, ml_oct,
             baseline_lb, ghca_lb, heur_lb, ml_lb,
             baseline_cost, ghca_cost, heur_cost, ml_cost,
@@ -85,13 +88,24 @@ def plot_improvement(ax, x, values, ylabel, title):
 
 
 def plot_all():
-    (problems,
+    (problems, jobs, ops_count,
      baseline_oct, ghca_oct, heur_oct, ml_oct,
      baseline_lb, ghca_lb, heur_lb, ml_lb,
      baseline_cost, ghca_cost, heur_cost, ml_cost,
      pct_vs_baseline, pct_vs_ghca, pct_vs_heuristic) = load_results()
 
     x = np.arange(len(problems))
+
+    # Enriched labels: "P1\n8p/24o" so reader sees scale at a glance
+    enriched_labels = [f"{p}\n{j}p/{o}o" for p, j, o in zip(problems, jobs, ops_count)]
+
+    # Regime separator positions (between the 4 benchmark sets of 10 each)
+    regime_boundaries = [9.5, 19.5, 29.5]  # between P10/P11, P20/P21, P30/P31
+
+    def add_regime_separators(ax):
+        for bx in regime_boundaries:
+            ax.axvline(x=bx, color='gray', linestyle=':', linewidth=1.0, alpha=0.6)
+
 
     # --------------------------------------------------------
     # GRAPH 1 — OCT Comparison across 40 problems
@@ -107,18 +121,19 @@ def plot_all():
     ax.plot(x, ml_oct, '^-', color='green',
             label='ML-GHCA (Ours)', linewidth=1.5, markersize=4)
 
-    ax.set_xlabel("Problem Number", fontsize=12)
+    ax.set_xlabel("Problem (parts/ops)", fontsize=12)
     ax.set_ylabel("Operational Completion Time (OCT)", fontsize=12)
     ax.set_title("OCT Comparison: Baseline vs GHCA vs Heuristic-GHCA vs ML-GHCA",
                  fontsize=13)
     ax.set_xticks(x[::4])
-    ax.set_xticklabels(problems[::4], rotation=45)
+    ax.set_xticklabels(enriched_labels[::4], rotation=45, ha='right', fontsize=8)
+    add_regime_separators(ax)
     ax.legend()
     ax.grid(True, alpha=0.3)
     plt.tight_layout()
     plt.savefig("results/graph1_oct_comparison.png", dpi=150)
     plt.close()
-    print("Graph 1 saved — OCT comparison")
+    print("Graph 1 saved -- OCT comparison")
 
     # --------------------------------------------------------
     # GRAPH 2 — Load Balance Score across 40 problems
@@ -134,18 +149,19 @@ def plot_all():
     ax.plot(x, ml_lb, '^-', color='green',
             label='ML-GHCA (Ours)', linewidth=1.5, markersize=4)
 
-    ax.set_xlabel("Problem Number", fontsize=12)
+    ax.set_xlabel("Problem (parts/ops)", fontsize=12)
     ax.set_ylabel("Load Balance Score (Std Dev)", fontsize=12)
     ax.set_title("Load Balance: Baseline vs GHCA vs Heuristic-GHCA vs ML-GHCA",
                  fontsize=13)
     ax.set_xticks(x[::4])
-    ax.set_xticklabels(problems[::4], rotation=45)
+    ax.set_xticklabels(enriched_labels[::4], rotation=45, ha='right', fontsize=8)
+    add_regime_separators(ax)
     ax.legend()
     ax.grid(True, alpha=0.3)
     plt.tight_layout()
     plt.savefig("results/graph2_load_balance.png", dpi=150)
     plt.close()
-    print("Graph 2 saved — Load balance comparison")
+    print("Graph 2 saved -- Load balance comparison")
 
     # --------------------------------------------------------
     # GRAPH 3 — Combined Cost comparison (bar chart)
@@ -162,18 +178,19 @@ def plot_all():
     ax.bar(x + 1.5 * width, ml_cost, width, label='ML-GHCA (Ours)',
            color='green', alpha=0.7)
 
-    ax.set_xlabel("Problem Number", fontsize=12)
-    ax.set_ylabel("Combined Cost (0.7×OCT + 0.3×LB)", fontsize=12)
+    ax.set_xlabel("Problem (parts/ops)", fontsize=12)
+    ax.set_ylabel("Combined Cost (0.7*OCT + 0.3*LB)", fontsize=12)
     ax.set_title("Combined Cost Comparison across 40 Benchmark Problems",
                  fontsize=13)
     ax.set_xticks(x[::4])
-    ax.set_xticklabels(problems[::4], rotation=45)
+    ax.set_xticklabels(enriched_labels[::4], rotation=45, ha='right', fontsize=8)
+    add_regime_separators(ax)
     ax.legend()
     ax.grid(True, alpha=0.3, axis='y')
     plt.tight_layout()
     plt.savefig("results/graph3_combined_cost.png", dpi=150)
     plt.close()
-    print("Graph 3 saved — Combined cost bar chart")
+    print("Graph 3 saved -- Combined cost bar chart")
 
     # --------------------------------------------------------
     # GRAPH 4 — ML-GHCA improvement vs GHCA (primary comparison)
@@ -186,13 +203,14 @@ def plot_all():
         ylabel="Improvement over GHCA (%)",
         title="ML-GHCA vs GHCA — Does the ML Layer Help?",
     )
-    ax.set_xlabel("Problem Number", fontsize=12)
+    ax.set_xlabel("Problem (parts/ops)", fontsize=12)
     ax.set_xticks(x[::4])
-    ax.set_xticklabels(problems[::4], rotation=45)
+    ax.set_xticklabels(enriched_labels[::4], rotation=45, ha='right', fontsize=8)
+    add_regime_separators(ax)
     plt.tight_layout()
     plt.savefig("results/graph4_improvement_vs_ghca.png", dpi=150)
     plt.close()
-    print("Graph 4 saved — Improvement vs GHCA")
+    print("Graph 4 saved -- Improvement vs GHCA")
 
     # --------------------------------------------------------
     # GRAPH 5 — ML-GHCA improvement vs Heuristic-GHCA (ablation)
@@ -204,13 +222,14 @@ def plot_all():
         ylabel="Improvement over Heuristic-GHCA (%)",
         title="ML-GHCA vs Heuristic-GHCA — Does ML Beat a Cheap Non-ML Sort?",
     )
-    ax.set_xlabel("Problem Number", fontsize=12)
+    ax.set_xlabel("Problem (parts/ops)", fontsize=12)
     ax.set_xticks(x[::4])
-    ax.set_xticklabels(problems[::4], rotation=45)
+    ax.set_xticklabels(enriched_labels[::4], rotation=45, ha='right', fontsize=8)
+    add_regime_separators(ax)
     plt.tight_layout()
     plt.savefig("results/graph5_improvement_vs_heuristic.png", dpi=150)
     plt.close()
-    print("Graph 5 saved — Improvement vs Heuristic-GHCA")
+    print("Graph 5 saved -- Improvement vs Heuristic-GHCA")
 
     print("\nAll graphs saved to results/ folder")
     print("Files:")

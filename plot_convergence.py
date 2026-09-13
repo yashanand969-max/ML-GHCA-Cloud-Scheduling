@@ -5,15 +5,12 @@
 # Run this AFTER updating genetic_algorithm.py
 # ============================================================
 
-import random
-import copy
 import matplotlib.pyplot as plt
 import os
 
 from scheduler import generate_problem, combined_cost
 from genetic_algorithm import genetic_algorithm
 from ml_layer import train_model, ml_sort
-from hill_climbing import hill_climbing
 
 os.makedirs("results", exist_ok=True)
 

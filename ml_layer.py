@@ -10,7 +10,6 @@ import copy
 from sklearn.linear_model import LinearRegression
 import numpy as np
 from scheduler import generate_problem, calculate_oct, calculate_load_balance, combined_cost
-from hill_climbing import hill_climbing
 from genetic_algorithm import genetic_algorithm
 
 
@@ -135,10 +134,7 @@ def ml_ghca(ops, model):
     # get ML-sorted sequence as starting point
     sorted_ops = ml_sort(ops, model)
 
-    # run HC on the smarter starting sequence
-    hc_best, hc_cost = hill_climbing(sorted_ops)
-
-    # run GA seeded with HC result
+    # run GA seeded with HC result (HC is called internally by genetic_algorithm)
     best_seq, best_cost = genetic_algorithm(sorted_ops)
 
     return best_seq, best_cost
