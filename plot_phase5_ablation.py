@@ -7,9 +7,57 @@ import csv
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+from sklearn.linear_model import LinearRegression
+import lightgbm as lgb
+from ml_layer import generate_training_data
 
 os.makedirs("results", exist_ok=True)
 CSV_PATH = "results/phase5_model_capacity_ablation.csv"
+
+
+def plot_model_fit():
+    print("Generating training data for model fit visualization...")
+    X, y = generate_training_data(n_samples=200)
+
+    # Linear model
+    lin = LinearRegression()
+    lin.fit(X, y)
+    y_pred_lin = lin.predict(X)
+    r2_lin = lin.score(X, y)
+    mae_lin = np.mean(np.abs(y - y_pred_lin))
+
+    # GBDT model (best params: 100 trees, depth 5, lr 0.1)
+    gbdt = lgb.LGBMRegressor(n_estimators=100, max_depth=5, learning_rate=0.1, random_state=42, verbose=-1)
+    gbdt.fit(X, y)
+    y_pred_gbdt = gbdt.predict(X)
+    r2_gbdt = gbdt.score(X, y)
+    mae_gbdt = np.mean(np.abs(y - y_pred_gbdt))
+
+    fig, axes = plt.subplots(1, 2, figsize=(14, 5.5))
+
+    # Subplot 1: Linear Regression
+    axes[0].scatter(y, y_pred_lin, alpha=0.35, color="#1976d2", s=18, edgecolors="none")
+    axes[0].plot([y.min(), y.max()], [y.min(), y.max()], "r--", lw=2, label="Ideal Fit (y = x)")
+    axes[0].set_title(f"Linear Regression (Low Capacity)\nR² = {r2_lin:.4f} | MAE = {mae_lin:.2f} min", fontsize=11, fontweight="bold")
+    axes[0].set_xlabel("Actual Completion Time (min)", fontsize=10)
+    axes[0].set_ylabel("Predicted Completion Time (min)", fontsize=10)
+    axes[0].legend(loc="upper left")
+    axes[0].grid(True, alpha=0.3)
+
+    # Subplot 2: GBDT (LightGBM)
+    axes[1].scatter(y, y_pred_gbdt, alpha=0.35, color="#388e3c", s=18, edgecolors="none")
+    axes[1].plot([y.min(), y.max()], [y.min(), y.max()], "r--", lw=2, label="Ideal Fit (y = x)")
+    axes[1].set_title(f"Gradient Boosted Trees (High Capacity)\nR² = {r2_gbdt:.4f} | MAE = {mae_gbdt:.2f} min", fontsize=11, fontweight="bold")
+    axes[1].set_xlabel("Actual Completion Time (min)", fontsize=10)
+    axes[1].set_ylabel("Predicted Completion Time (min)", fontsize=10)
+    axes[1].legend(loc="upper left")
+    axes[1].grid(True, alpha=0.3)
+
+    plt.tight_layout()
+    output_fig = "results/graph8_model_capacity_fit.png"
+    plt.savefig(output_fig, dpi=300)
+    plt.close()
+    print(f"Saved: {output_fig}")
 
 
 def plot_phase5_figures():
@@ -111,4 +159,5 @@ def plot_phase5_figures():
 
 
 if __name__ == "__main__":
+    plot_model_fit()
     plot_phase5_figures()
