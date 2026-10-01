@@ -12,7 +12,7 @@ from scheduler import generate_problem, combined_cost
 from genetic_algorithm import genetic_algorithm
 from ml_layer import train_model, ml_sort
 
-os.makedirs("results", exist_ok=True)
+os.makedirs("graphs", exist_ok=True)
 
 
 def run_ghca_with_convergence(ops):
@@ -89,10 +89,10 @@ def plot_convergence():
     ax.grid(True, alpha=0.3)
 
     plt.tight_layout()
-    plt.savefig("results/graph5_convergence.png", dpi=150)
+    plt.savefig("graphs/graph5_convergence.png", dpi=150)
     plt.close()
 
-    print("\nGraph 5 saved — results/graph5_convergence.png")
+    print("\nGraph 5 saved — graphs/graph5_convergence.png")
     print(f"\n--- CONVERGENCE SUMMARY ---")
     print(f"GHCA   starting cost : {round(ghca_history[0], 2)}")
     print(f"GHCA   final cost    : {round(ghca_final, 2)}")

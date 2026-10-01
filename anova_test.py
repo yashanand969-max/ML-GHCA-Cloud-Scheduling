@@ -22,6 +22,7 @@
 # ============================================================
 
 import csv
+import os
 import numpy as np
 from scipy import stats
 
@@ -29,10 +30,11 @@ from scipy import stats
 def load_results():
     baseline_costs = []
     ghca_costs = []
-    heuristic_costs = []
-    ml_costs = []
+    csv_path = "dataset/benchmarks/benchmark_results.csv"
+    if not os.path.exists(csv_path):
+        csv_path = "results/benchmark_results.csv"
 
-    with open("results/benchmark_results.csv", "r") as f:
+    with open(csv_path, "r", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
             baseline_costs.append(float(row["Baseline_Cost"]))

@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-os.makedirs("results", exist_ok=True)
+os.makedirs("graphs", exist_ok=True)
 
 REQUIRED_COLUMNS = [
     "Problem",
@@ -24,7 +24,11 @@ REQUIRED_COLUMNS = [
 
 
 def load_results():
-    with open("results/benchmark_results.csv", "r", encoding="utf-8") as f:
+    csv_path = "dataset/benchmarks/benchmark_results.csv"
+    if not os.path.exists(csv_path):
+        csv_path = "results/benchmark_results.csv"
+
+    with open(csv_path, "r", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         if not reader.fieldnames:
             raise ValueError("benchmark_results.csv is empty — run main.py first.")
@@ -131,7 +135,7 @@ def plot_all():
     ax.legend()
     ax.grid(True, alpha=0.3)
     plt.tight_layout()
-    plt.savefig("results/graph1_oct_comparison.png", dpi=150)
+    plt.savefig("graphs/graph1_oct_comparison.png", dpi=150)
     plt.close()
     print("Graph 1 saved -- OCT comparison")
 
@@ -159,7 +163,7 @@ def plot_all():
     ax.legend()
     ax.grid(True, alpha=0.3)
     plt.tight_layout()
-    plt.savefig("results/graph2_load_balance.png", dpi=150)
+    plt.savefig("graphs/graph2_load_balance.png", dpi=150)
     plt.close()
     print("Graph 2 saved -- Load balance comparison")
 
@@ -188,7 +192,7 @@ def plot_all():
     ax.legend()
     ax.grid(True, alpha=0.3, axis='y')
     plt.tight_layout()
-    plt.savefig("results/graph3_combined_cost.png", dpi=150)
+    plt.savefig("graphs/graph3_combined_cost.png", dpi=150)
     plt.close()
     print("Graph 3 saved -- Combined cost bar chart")
 
@@ -208,7 +212,7 @@ def plot_all():
     ax.set_xticklabels(enriched_labels[::4], rotation=45, ha='right', fontsize=8)
     add_regime_separators(ax)
     plt.tight_layout()
-    plt.savefig("results/graph4_improvement_vs_ghca.png", dpi=150)
+    plt.savefig("graphs/graph4_improvement_vs_ghca.png", dpi=150)
     plt.close()
     print("Graph 4 saved -- Improvement vs GHCA")
 
@@ -227,17 +231,17 @@ def plot_all():
     ax.set_xticklabels(enriched_labels[::4], rotation=45, ha='right', fontsize=8)
     add_regime_separators(ax)
     plt.tight_layout()
-    plt.savefig("results/graph5_improvement_vs_heuristic.png", dpi=150)
+    plt.savefig("graphs/graph5_improvement_vs_heuristic.png", dpi=150)
     plt.close()
     print("Graph 5 saved -- Improvement vs Heuristic-GHCA")
 
-    print("\nAll graphs saved to results/ folder")
+    print("\nAll graphs saved to graphs/ folder")
     print("Files:")
-    print("  results/graph1_oct_comparison.png")
-    print("  results/graph2_load_balance.png")
-    print("  results/graph3_combined_cost.png")
-    print("  results/graph4_improvement_vs_ghca.png  (primary ML comparison)")
-    print("  results/graph5_improvement_vs_heuristic.png  (ablation)")
+    print("  graphs/graph1_oct_comparison.png")
+    print("  graphs/graph2_load_balance.png")
+    print("  graphs/graph3_combined_cost.png")
+    print("  graphs/graph4_improvement_vs_ghca.png  (primary ML comparison)")
+    print("  graphs/graph5_improvement_vs_heuristic.png  (ablation)")
     print(f"\nSanity check — avg improvement vs baseline: "
           f"{round(np.mean(pct_vs_baseline), 2)}% (not the main ML claim)")
 

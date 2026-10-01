@@ -1,0 +1,13 @@
+Scope,Comparison,Control_Mean,Surrogate_Mean,Mean_Diff,Mean_Pct_Gain,Wins,Ties,Losses,Wilcoxon_W,P_Value,Rank_Biserial_r,Verdict
+Small,Baseline vs Surrogate,129.16,91.4,37.77,28.55,20,0,0,210.0,0.0,1.0,Significant Advantage (p < 0.05)
+Small,GHCA vs Surrogate,91.29,91.4,-0.11,-0.13,9,1,10,62.0,0.90802,-0.347,Null / No Significant Difference
+Small,Heuristic vs Surrogate,91.16,91.4,-0.24,-0.27,5,0,15,46.0,0.98622,-0.562,Null / No Significant Difference
+Small,Linear-ML vs Surrogate,91.29,91.4,-0.11,-0.13,8,0,12,76.0,0.86054,-0.276,Null / No Significant Difference
+Large,Baseline vs Surrogate,278.4,196.42,81.98,28.75,20,0,0,210.0,0.0,1.0,Significant Advantage (p < 0.05)
+Large,GHCA vs Surrogate,196.42,196.42,-0.01,-0.0,9,0,11,101.0,0.55936,-0.038,Null / No Significant Difference
+Large,Heuristic vs Surrogate,196.13,196.42,-0.3,-0.15,3,0,17,31.0,0.99714,-0.705,Null / No Significant Difference
+Large,Linear-ML vs Surrogate,196.22,196.42,-0.2,-0.11,7,0,13,61.0,0.94986,-0.419,Null / No Significant Difference
+Pooled,Baseline vs Surrogate,203.78,143.91,59.87,28.65,40,0,0,820.0,0.0,1.0,Significant Advantage (p < 0.05)
+Pooled,GHCA vs Surrogate,143.85,143.91,-0.06,-0.06,18,1,21,327.0,0.81036,-0.162,Null / No Significant Difference
+Pooled,Heuristic vs Surrogate,143.64,143.91,-0.27,-0.21,8,0,32,143.0,0.99983,-0.651,Null / No Significant Difference
+Pooled,Linear-ML vs Surrogate,143.76,143.91,-0.15,-0.12,15,0,25,267.5,0.97229,-0.348,Null / No Significant Difference

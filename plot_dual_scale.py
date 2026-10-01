@@ -8,8 +8,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-os.makedirs("results", exist_ok=True)
-CSV_PATH = "results/benchmark_results.csv"
+os.makedirs("graphs", exist_ok=True)
+CSV_PATH = "dataset/benchmarks/benchmark_results.csv"
+if not os.path.exists(CSV_PATH):
+    CSV_PATH = "results/benchmark_results.csv"
 
 
 def load_dual_scale_data():
@@ -127,7 +129,7 @@ def plot_distributions():
     axes[2].grid(True, alpha=0.3, axis="y")
 
     plt.tight_layout()
-    output_fig6 = "results/graph6_dual_scale_distributions.png"
+    output_fig6 = "graphs/graph6_dual_scale_distributions.png"
     plt.savefig(output_fig6, dpi=300)
     plt.close()
     print(f"Saved: {output_fig6}")
@@ -160,7 +162,7 @@ def plot_distributions():
     axes[1].grid(True, alpha=0.3, axis="y")
 
     plt.tight_layout()
-    output_fig7 = "results/graph7_regime_comparison_boxplots.png"
+    output_fig7 = "graphs/graph7_regime_comparison_boxplots.png"
     plt.savefig(output_fig7, dpi=300)
     plt.close()
     print(f"Saved: {output_fig7}")

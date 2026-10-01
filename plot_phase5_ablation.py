@@ -11,8 +11,10 @@ from sklearn.linear_model import LinearRegression
 import lightgbm as lgb
 from ml_layer import generate_training_data
 
-os.makedirs("results", exist_ok=True)
-CSV_PATH = "results/phase5_model_capacity_ablation.csv"
+os.makedirs("graphs", exist_ok=True)
+CSV_PATH = "dataset/benchmarks/phase5_model_capacity_ablation.csv"
+if not os.path.exists(CSV_PATH):
+    CSV_PATH = "results/phase5_model_capacity_ablation.csv"
 
 
 def plot_model_fit():
@@ -54,7 +56,7 @@ def plot_model_fit():
     axes[1].grid(True, alpha=0.3)
 
     plt.tight_layout()
-    output_fig = "results/graph8_model_capacity_fit.png"
+    output_fig = "graphs/graph8_model_capacity_fit.png"
     plt.savefig(output_fig, dpi=300)
     plt.close()
     print(f"Saved: {output_fig}")
@@ -152,7 +154,7 @@ def plot_phase5_figures():
     axes[2].grid(True, alpha=0.3, axis="y")
 
     plt.tight_layout()
-    output_fig = "results/graph9_model_capacity_schedule_comparison.png"
+    output_fig = "graphs/graph9_model_capacity_schedule_comparison.png"
     plt.savefig(output_fig, dpi=300)
     plt.close()
     print(f"Saved: {output_fig}")

@@ -128,14 +128,15 @@ def run_all_benchmarks():
 
     # save to CSV
     import os
-    os.makedirs("results", exist_ok=True)
+    os.makedirs("dataset/benchmarks", exist_ok=True)
 
-    with open("results/benchmark_results.csv", "w", newline="") as f:
+    csv_out = "dataset/benchmarks/benchmark_results.csv"
+    with open(csv_out, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=results[0].keys())
         writer.writeheader()
         writer.writerows(results)
 
-    print(f"\nResults saved to results/benchmark_results.csv")
+    print(f"\nResults saved to {csv_out}")
 
     # summary statistics
     avg_baseline = sum(r["Baseline_Cost"] for r in results) / len(results)

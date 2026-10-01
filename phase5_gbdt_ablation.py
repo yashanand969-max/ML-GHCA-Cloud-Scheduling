@@ -47,9 +47,12 @@ RANDOM_SEED = 42
 random.seed(RANDOM_SEED)
 np.random.seed(RANDOM_SEED)
 
-CSV_BENCHMARK_RESULTS = "results/benchmark_results.csv"
-CSV_PHASE5_OUTPUT = "results/phase5_model_capacity_ablation.csv"
-CSV_PHASE5_SWEEP = "results/phase5_hyperparameter_sweep.csv"
+CSV_BENCHMARK_RESULTS = "dataset/benchmarks/benchmark_results.csv"
+if not os.path.exists(CSV_BENCHMARK_RESULTS):
+    CSV_BENCHMARK_RESULTS = "results/benchmark_results.csv"
+
+CSV_PHASE5_OUTPUT = "dataset/benchmarks/phase5_model_capacity_ablation.csv"
+CSV_PHASE5_SWEEP = "dataset/benchmarks/phase5_hyperparameter_sweep.csv"
 
 
 # ------------------------------------------------------------

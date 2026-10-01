@@ -13,6 +13,7 @@
 # ============================================================
 
 import csv
+import os
 import numpy as np
 from scipy import stats
 
@@ -33,7 +34,11 @@ def load_oct_lb():
         "MLGHCA":   {"oct": [], "lb": []},
     }
 
-    with open("results/benchmark_results.csv", "r", encoding="utf-8") as f:
+    csv_path = "dataset/benchmarks/benchmark_results.csv"
+    if not os.path.exists(csv_path):
+        csv_path = "results/benchmark_results.csv"
+
+    with open(csv_path, "r", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
             methods["Baseline"]["oct"].append(float(row["Baseline_OCT"]))
