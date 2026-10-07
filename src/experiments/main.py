@@ -15,9 +15,23 @@
 
 import copy
 import csv
-from scheduler import generate_problem, calculate_oct, calculate_load_balance, combined_cost
-from genetic_algorithm import genetic_algorithm
-from ml_layer import train_model, ml_ghca
+import sys
+import os
+from pathlib import Path
+
+# Add project root to sys.path
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+try:
+    from src.core.scheduler import generate_problem, calculate_oct, calculate_load_balance, combined_cost
+    from src.core.genetic_algorithm import genetic_algorithm
+    from src.ml.ml_layer import train_model, ml_ghca
+except ImportError:
+    from scheduler import generate_problem, calculate_oct, calculate_load_balance, combined_cost
+    from genetic_algorithm import genetic_algorithm
+    from ml_layer import train_model, ml_ghca
 
 # --- 40 BENCHMARK PROBLEMS ---
 # Varying job counts and operation counts
@@ -127,10 +141,10 @@ def run_all_benchmarks():
               f"vs GHCA: {pct_vs_ghca:>6}% | vs Heuristic: {pct_vs_heuristic:>6}%")
 
     # save to CSV
-    import os
-    os.makedirs("dataset/benchmarks", exist_ok=True)
+    bench_dir = os.path.join(PROJECT_ROOT, "dataset", "benchmarks")
+    os.makedirs(bench_dir, exist_ok=True)
 
-    csv_out = "dataset/benchmarks/benchmark_results.csv"
+    csv_out = os.path.join(bench_dir, "benchmark_results.csv")
     with open(csv_out, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=results[0].keys())
         writer.writeheader()

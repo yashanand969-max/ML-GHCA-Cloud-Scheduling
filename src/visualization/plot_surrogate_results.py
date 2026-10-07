@@ -9,16 +9,29 @@
 # ============================================================
 
 import os
+import sys
+from pathlib import Path
 import csv
 import time
 import numpy as np
 import matplotlib.pyplot as plt
 
-from scheduler import generate_problem
-from genetic_algorithm import genetic_algorithm, genetic_algorithm_surrogate
+# Add project root to sys.path
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
-DIR_GRAPHS = "graphs"
-CSV_SURROGATE_RESULTS = "dataset/benchmarks/surrogate_benchmark_results.csv"
+try:
+    from src.core.scheduler import generate_problem
+    from src.core.genetic_algorithm import genetic_algorithm, genetic_algorithm_surrogate
+except ImportError:
+    from scheduler import generate_problem
+    from genetic_algorithm import genetic_algorithm, genetic_algorithm_surrogate
+
+DIR_GRAPHS = os.path.join(PROJECT_ROOT, "graphs")
+os.makedirs(DIR_GRAPHS, exist_ok=True)
+
+CSV_SURROGATE_RESULTS = os.path.join(PROJECT_ROOT, "dataset", "benchmarks", "surrogate_benchmark_results.csv")
 PNG_CONVERGENCE = os.path.join(DIR_GRAPHS, "graph11_surrogate_convergence.png")
 PNG_BENCHMARK = os.path.join(DIR_GRAPHS, "graph12_surrogate_benchmark.png")
 PNG_DIFF = os.path.join(DIR_GRAPHS, "graph13_surrogate_vs_ghca_diff.png")

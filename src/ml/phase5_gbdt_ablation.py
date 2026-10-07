@@ -31,28 +31,38 @@ import copy
 import time
 import csv
 import os
+import sys
+from pathlib import Path
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import KFold, cross_val_score
 from scipy import stats
 import lightgbm as lgb
 
-from scheduler import generate_problem, calculate_oct, calculate_load_balance, combined_cost
-from hill_climbing import hill_climbing
-from genetic_algorithm import genetic_algorithm
-from ml_layer import generate_training_data
+# Add project root to sys.path
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+try:
+    from src.core.scheduler import generate_problem, calculate_oct, calculate_load_balance, combined_cost
+    from src.core.hill_climbing import hill_climbing
+    from src.core.genetic_algorithm import genetic_algorithm
+    from src.ml.ml_layer import generate_training_data
+except ImportError:
+    from scheduler import generate_problem, calculate_oct, calculate_load_balance, combined_cost
+    from hill_climbing import hill_climbing
+    from genetic_algorithm import genetic_algorithm
+    from ml_layer import generate_training_data
 
 # Fixed seeds for exact reproducibility
 RANDOM_SEED = 42
 random.seed(RANDOM_SEED)
 np.random.seed(RANDOM_SEED)
 
-CSV_BENCHMARK_RESULTS = "dataset/benchmarks/benchmark_results.csv"
-if not os.path.exists(CSV_BENCHMARK_RESULTS):
-    CSV_BENCHMARK_RESULTS = "results/benchmark_results.csv"
-
-CSV_PHASE5_OUTPUT = "dataset/benchmarks/phase5_model_capacity_ablation.csv"
-CSV_PHASE5_SWEEP = "dataset/benchmarks/phase5_hyperparameter_sweep.csv"
+CSV_BENCHMARK_RESULTS = os.path.join(PROJECT_ROOT, "dataset", "benchmarks", "benchmark_results.csv")
+CSV_PHASE5_OUTPUT = os.path.join(PROJECT_ROOT, "dataset", "benchmarks", "phase5_model_capacity_ablation.csv")
+CSV_PHASE5_SWEEP = os.path.join(PROJECT_ROOT, "dataset", "benchmarks", "phase5_hyperparameter_sweep.csv")
 
 
 # ------------------------------------------------------------

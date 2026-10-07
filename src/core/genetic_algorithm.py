@@ -7,8 +7,21 @@
 
 import random
 import copy
-from scheduler import generate_problem, calculate_oct, calculate_load_balance, combined_cost
-from hill_climbing import hill_climbing
+import sys
+import os
+from pathlib import Path
+
+# Add project root to sys.path
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+try:
+    from src.core.scheduler import generate_problem, calculate_oct, calculate_load_balance, combined_cost
+    from src.core.hill_climbing import hill_climbing
+except ImportError:
+    from scheduler import generate_problem, calculate_oct, calculate_load_balance, combined_cost
+    from hill_climbing import hill_climbing
 
 POPULATION_SIZE = 20
 GENERATIONS = 200
@@ -118,11 +131,11 @@ def get_default_surrogate():
     if _cached_surrogate is None or _cached_scaler is None:
         import joblib
         import os
-        model_path = "models/surrogate_model.pkl"
-        scaler_path = "models/surrogate_scaler.pkl"
+        model_path = os.path.join(PROJECT_ROOT, "models", "surrogate_model.pkl")
+        scaler_path = os.path.join(PROJECT_ROOT, "models", "surrogate_scaler.pkl")
         if not os.path.exists(model_path) or not os.path.exists(scaler_path):
             raise FileNotFoundError(
-                "Surrogate model/scaler not found in models/. Run surrogate_model.py first."
+                f"Surrogate model/scaler not found in {PROJECT_ROOT}/models/. Run surrogate_model.py first."
             )
         _cached_surrogate = joblib.load(model_path)
         _cached_scaler = joblib.load(scaler_path)
@@ -133,7 +146,10 @@ def evaluate_population_surrogate(population, surrogate_model, scaler):
     """
     Extracts features for all individuals and batch-predicts fitness.
     """
-    from surrogate_data_generator import extract_sequence_features
+    try:
+        from src.ml.surrogate_data_generator import extract_sequence_features
+    except ImportError:
+        from surrogate_data_generator import extract_sequence_features
     import numpy as np
 
     feat_matrix = np.array([extract_sequence_features(ind) for ind in population], dtype=np.float32)

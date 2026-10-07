@@ -11,14 +11,26 @@ import copy
 import time
 import csv
 import os
+import sys
+from pathlib import Path
 import numpy as np
 from scipy import stats
 
-from scheduler import generate_problem, calculate_oct, calculate_load_balance, combined_cost
-from genetic_algorithm import genetic_algorithm, genetic_algorithm_surrogate
-from ml_layer import train_model, ml_ghca
+# Add project root to sys.path
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
-DIR_BENCHMARKS = "dataset/benchmarks"
+try:
+    from src.core.scheduler import generate_problem, calculate_oct, calculate_load_balance, combined_cost
+    from src.core.genetic_algorithm import genetic_algorithm, genetic_algorithm_surrogate
+    from src.ml.ml_layer import train_model, ml_ghca
+except ImportError:
+    from scheduler import generate_problem, calculate_oct, calculate_load_balance, combined_cost
+    from genetic_algorithm import genetic_algorithm, genetic_algorithm_surrogate
+    from ml_layer import train_model, ml_ghca
+
+DIR_BENCHMARKS = os.path.join(PROJECT_ROOT, "dataset", "benchmarks")
 CSV_SURROGATE_RESULTS = os.path.join(DIR_BENCHMARKS, "surrogate_benchmark_results.csv")
 CSV_STATISTICAL_TESTS = os.path.join(DIR_BENCHMARKS, "surrogate_statistical_tests.csv")
 

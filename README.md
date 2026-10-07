@@ -9,22 +9,49 @@ A research framework for **Flexible Manufacturing System (FMS) Scheduling Optimi
 ```text
 ML-GHCA-Cloud-Scheduling/
 │
-├── dataset/                        # Benchmark datasets & training caches
-│   ├── raw/                        # Serialized problem instances (problems_cache.pkl)
-│   ├── training/                   # 51,000 sequence feature rows (train/test splits)
-│   └── benchmarks/                 # Standardized 40-problem benchmark CSV records
+├── src/                                # Modular source code repository
+│   ├── core/                           # Simulation engine & metaheuristic optimizers
+│   │   ├── scheduler.py                # Ulusoy benchmark generator & cost functions
+│   │   ├── hill_climbing.py            # Local search (1,000 iter swap neighborhood)
+│   │   └── genetic_algorithm.py        # GHCA & Surrogate-accelerated GA optimizers
+│   │
+│   ├── ml/                             # Machine learning & surrogate models
+│   │   ├── ml_layer.py                 # Linear regression pre-search prioritization
+│   │   ├── phase5_gbdt_ablation.py     # Model capacity ablation study (GBDT / LightGBM)
+│   │   ├── surrogate_data_generator.py # 28-feature sequence dataset builder (51k rows)
+│   │   └── surrogate_model.py          # Surrogate training, ranking validation & diagnostics
+│   │
+│   ├── experiments/                    # Dual-scale benchmarks & statistical testing
+│   │   ├── main.py                     # 40-problem dual-scale benchmark runner
+│   │   ├── surrogate_benchmark.py      # 40-problem surrogate benchmark & hypothesis tests
+│   │   ├── surrogate_ablation.py       # Generation budget & interval sensitivity checks
+│   │   ├── dual_scale_analysis.py      # Small vs Large scale comparative analysis
+│   │   ├── anova_test.py               # Decoupled Wilcoxon tests & effect size analysis
+│   │   └── weight_sensitivity.py       # Objective weight stability analysis (0.5/0.7/0.9)
+│   │
+│   └── visualization/                  # Publication plotting scripts (300 DPI)
+│       ├── plot_results.py             # Graphs 1–4
+│       ├── plot_convergence.py         # Graph 5
+│       ├── plot_dual_scale.py          # Graphs 6–7
+│       ├── plot_phase5_ablation.py     # Graphs 8–9
+│       └── plot_surrogate_results.py   # Graphs 11–13
+│
+├── dataset/                            # Benchmark datasets & training caches
+│   ├── raw/                            # Serialized problem instances (problems_cache.pkl)
+│   ├── training/                       # 51,000 sequence feature rows (train/test splits)
+│   └── benchmarks/                     # Standardized 40-problem benchmark CSV records
 │       ├── benchmark_results.csv
 │       ├── dual_scale_summary.csv
 │       ├── surrogate_benchmark_results.csv
 │       └── surrogate_statistical_tests.csv
 │
-├── docs/                           # Documentation, reports & research roadmaps
+├── docs/                               # Documentation, reports & research roadmaps
 │   ├── fms_scheduling_project_roadmap_updated.pdf
 │   ├── pbl2 FINAL REPORT.doc
 │   ├── surrogate_implementation_plan.py
 │   └── walkthrough.md
 │
-├── graphs/                         # High-resolution (300 DPI) publication figures
+├── graphs/                             # High-resolution (300 DPI) publication figures
 │   ├── graph1_oct_comparison.png
 │   ├── graph2_load_balance.png
 │   ├── graph3_combined_cost.png
@@ -40,27 +67,15 @@ ML-GHCA-Cloud-Scheduling/
 │   ├── graph12_surrogate_benchmark.png
 │   └── graph13_surrogate_vs_ghca_diff.png
 │
-├── models/                         # Serialized ML model artifacts
-│   ├── surrogate_model.pkl         # Trained Ridge regression surrogate
-│   └── surrogate_scaler.pkl        # Fitted StandardScaler
+├── models/                             # Serialized ML model artifacts
+│   ├── surrogate_model.pkl             # Trained Ridge regression surrogate
+│   └── surrogate_scaler.pkl            # Fitted StandardScaler
 │
-├── scheduler.py                    # Ulusoy benchmark generator & cost functions
-├── genetic_algorithm.py            # GHCA & Surrogate-accelerated GA optimizers
-├── hill_climbing.py                # Local search (1000 iter swap neighborhood)
-├── ml_layer.py                     # Linear regression pre-search prioritization
-├── main.py                         # 40-problem dual-scale benchmark runner
-├── anova_test.py                   # Decoupled Wilcoxon tests & effect size analysis
-├── dual_scale_analysis.py          # Small vs Large scale comparative analysis
-├── weight_sensitivity.py           # Objective weight stability analysis (0.5/0.7/0.9)
-├── phase5_gbdt_ablation.py         # Model capacity ablation study (GBDT / LightGBM)
-├── surrogate_data_generator.py     # 28-feature sequence dataset builder
-├── surrogate_model.py              # Surrogate training, ranking validation & diagnostics
-├── surrogate_benchmark.py          # 40-problem surrogate benchmark & hypothesis tests
-├── surrogate_ablation.py           # Generation budget & interval sensitivity checks
-│
-├── requirements.txt                # Pinned dependencies
-├── .gitignore                      # Repository hygiene rules
-└── README.md                       # Project documentation & reproduction guide
+├── bundle_code_to_docx.py              # Automated Word (.docx) code appendix bundler
+├── PROJECT_REPORT_MASTER_DOSSIER.md    # Comprehensive academic research & data dossier
+├── requirements.txt                    # Pinned dependencies
+├── .gitignore                          # Repository hygiene rules
+└── README.md                           # Project documentation & reproduction guide
 ```
 
 ---
@@ -74,10 +89,10 @@ To reproduce the entire benchmark and generate all statistical tables and figure
 pip install -r requirements.txt
 
 # 2. Run data generation and train the surrogate fitness model
-python surrogate_data_generator.py && python surrogate_model.py
+python src/ml/surrogate_data_generator.py && python src/ml/surrogate_model.py
 
 # 3. Execute 40-problem dual-scale benchmarks and plot all publication graphs
-python surrogate_benchmark.py && python plot_surrogate_results.py && python plot_results.py
+python src/experiments/surrogate_benchmark.py && python src/visualization/plot_surrogate_results.py && python src/visualization/plot_results.py
 ```
 
 ---

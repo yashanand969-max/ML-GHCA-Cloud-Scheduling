@@ -23,16 +23,23 @@
 
 import csv
 import os
+import sys
+from pathlib import Path
 import numpy as np
 from scipy import stats
+
+# Add project root to sys.path
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 # --- LOAD RESULTS FROM CSV ---
 def load_results():
     baseline_costs = []
     ghca_costs = []
-    csv_path = "dataset/benchmarks/benchmark_results.csv"
-    if not os.path.exists(csv_path):
-        csv_path = "results/benchmark_results.csv"
+    heuristic_costs = []
+    ml_costs = []
+    csv_path = os.path.join(PROJECT_ROOT, "dataset", "benchmarks", "benchmark_results.csv")
 
     with open(csv_path, "r", encoding="utf-8") as f:
         reader = csv.DictReader(f)

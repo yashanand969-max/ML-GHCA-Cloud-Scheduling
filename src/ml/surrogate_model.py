@@ -18,11 +18,18 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import Ridge
 from sklearn.neural_network import MLPRegressor
 import lightgbm as lgb
+import sys
+from pathlib import Path
+
+# Add project root to sys.path
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 # Paths
-DIR_TRAINING = "dataset/training"
-DIR_MODELS = "models"
-DIR_GRAPHS = "graphs"
+DIR_TRAINING = os.path.join(PROJECT_ROOT, "dataset", "training")
+DIR_MODELS = os.path.join(PROJECT_ROOT, "models")
+DIR_GRAPHS = os.path.join(PROJECT_ROOT, "graphs")
 
 CSV_TRAIN = os.path.join(DIR_TRAINING, "train_split.csv")
 CSV_TEST = os.path.join(DIR_TRAINING, "test_split.csv")

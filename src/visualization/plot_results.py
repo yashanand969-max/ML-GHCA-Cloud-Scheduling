@@ -4,12 +4,20 @@
 # 5 graphs total — aligned with main.py CSV schema
 # ============================================================
 
+import os
+import sys
+from pathlib import Path
 import csv
 import numpy as np
 import matplotlib.pyplot as plt
-import os
 
-os.makedirs("graphs", exist_ok=True)
+# Add project root to sys.path
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+DIR_GRAPHS = os.path.join(PROJECT_ROOT, "graphs")
+os.makedirs(DIR_GRAPHS, exist_ok=True)
 
 REQUIRED_COLUMNS = [
     "Problem",
@@ -24,9 +32,7 @@ REQUIRED_COLUMNS = [
 
 
 def load_results():
-    csv_path = "dataset/benchmarks/benchmark_results.csv"
-    if not os.path.exists(csv_path):
-        csv_path = "results/benchmark_results.csv"
+    csv_path = os.path.join(PROJECT_ROOT, "dataset", "benchmarks", "benchmark_results.csv")
 
     with open(csv_path, "r", encoding="utf-8") as f:
         reader = csv.DictReader(f)
@@ -135,7 +141,7 @@ def plot_all():
     ax.legend()
     ax.grid(True, alpha=0.3)
     plt.tight_layout()
-    plt.savefig("graphs/graph1_oct_comparison.png", dpi=150)
+    plt.savefig(os.path.join(DIR_GRAPHS, "graph1_oct_comparison.png"), dpi=150)
     plt.close()
     print("Graph 1 saved -- OCT comparison")
 
@@ -163,7 +169,7 @@ def plot_all():
     ax.legend()
     ax.grid(True, alpha=0.3)
     plt.tight_layout()
-    plt.savefig("graphs/graph2_load_balance.png", dpi=150)
+    plt.savefig(os.path.join(DIR_GRAPHS, "graph2_load_balance.png"), dpi=150)
     plt.close()
     print("Graph 2 saved -- Load balance comparison")
 
@@ -192,7 +198,7 @@ def plot_all():
     ax.legend()
     ax.grid(True, alpha=0.3, axis='y')
     plt.tight_layout()
-    plt.savefig("graphs/graph3_combined_cost.png", dpi=150)
+    plt.savefig(os.path.join(DIR_GRAPHS, "graph3_combined_cost.png"), dpi=150)
     plt.close()
     print("Graph 3 saved -- Combined cost bar chart")
 
@@ -212,7 +218,7 @@ def plot_all():
     ax.set_xticklabels(enriched_labels[::4], rotation=45, ha='right', fontsize=8)
     add_regime_separators(ax)
     plt.tight_layout()
-    plt.savefig("graphs/graph4_improvement_vs_ghca.png", dpi=150)
+    plt.savefig(os.path.join(DIR_GRAPHS, "graph4_improvement_vs_ghca.png"), dpi=150)
     plt.close()
     print("Graph 4 saved -- Improvement vs GHCA")
 
@@ -231,7 +237,7 @@ def plot_all():
     ax.set_xticklabels(enriched_labels[::4], rotation=45, ha='right', fontsize=8)
     add_regime_separators(ax)
     plt.tight_layout()
-    plt.savefig("graphs/graph5_improvement_vs_heuristic.png", dpi=150)
+    plt.savefig(os.path.join(DIR_GRAPHS, "graph5_improvement_vs_heuristic.png"), dpi=150)
     plt.close()
     print("Graph 5 saved -- Improvement vs Heuristic-GHCA")
 

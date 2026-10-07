@@ -5,7 +5,18 @@
 
 import random
 import copy
-from scheduler import generate_problem, calculate_oct, calculate_load_balance, combined_cost
+import sys
+from pathlib import Path
+
+# Add project root to sys.path
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+try:
+    from src.core.scheduler import generate_problem, calculate_oct, calculate_load_balance, combined_cost
+except ImportError:
+    from scheduler import generate_problem, calculate_oct, calculate_load_balance, combined_cost
 
 
 def hill_climbing(ops, iterations=1000):

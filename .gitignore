@@ -21,3 +21,9 @@ dataset/training/*.csv
 !dataset/benchmarks/*.csv
 !models/*.pkl
 !graphs/*.png
+
+# Office document binaries / generated reports
+*.docx
+*.doc
+!docs/pbl2 FINAL REPORT.doc
+

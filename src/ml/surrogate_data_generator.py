@@ -13,14 +13,25 @@ import math
 import random
 import pickle
 import csv
+import sys
+from pathlib import Path
 import numpy as np
 
-from scheduler import generate_problem, combined_cost, MACHINES, VEHICLES
-from hill_climbing import hill_climbing
+# Add project root to sys.path
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+try:
+    from src.core.scheduler import generate_problem, combined_cost, MACHINES, VEHICLES
+    from src.core.hill_climbing import hill_climbing
+except ImportError:
+    from scheduler import generate_problem, combined_cost, MACHINES, VEHICLES
+    from hill_climbing import hill_climbing
 
 # Paths
-DIR_DATASET_RAW = "dataset/raw"
-DIR_DATASET_TRAIN = "dataset/training"
+DIR_DATASET_RAW = os.path.join(PROJECT_ROOT, "dataset", "raw")
+DIR_DATASET_TRAIN = os.path.join(PROJECT_ROOT, "dataset", "training")
 PKL_PROBLEMS_CACHE = os.path.join(DIR_DATASET_RAW, "problems_cache.pkl")
 CSV_ALL_FEATURES = os.path.join(DIR_DATASET_TRAIN, "surrogate_features.csv")
 CSV_TRAIN_SPLIT = os.path.join(DIR_DATASET_TRAIN, "train_split.csv")

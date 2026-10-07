@@ -9,12 +9,23 @@ import matplotlib.pyplot as plt
 import os
 from sklearn.linear_model import LinearRegression
 import lightgbm as lgb
-from ml_layer import generate_training_data
+import sys
+from pathlib import Path
 
-os.makedirs("graphs", exist_ok=True)
-CSV_PATH = "dataset/benchmarks/phase5_model_capacity_ablation.csv"
-if not os.path.exists(CSV_PATH):
-    CSV_PATH = "results/phase5_model_capacity_ablation.csv"
+# Add project root to sys.path
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+DIR_GRAPHS = os.path.join(PROJECT_ROOT, "graphs")
+os.makedirs(DIR_GRAPHS, exist_ok=True)
+
+try:
+    from src.ml.ml_layer import generate_training_data
+except ImportError:
+    from ml_layer import generate_training_data
+
+CSV_PATH = os.path.join(PROJECT_ROOT, "dataset", "benchmarks", "phase5_model_capacity_ablation.csv")
 
 
 def plot_model_fit():
@@ -56,7 +67,7 @@ def plot_model_fit():
     axes[1].grid(True, alpha=0.3)
 
     plt.tight_layout()
-    output_fig = "graphs/graph8_model_capacity_fit.png"
+    output_fig = os.path.join(DIR_GRAPHS, "graph8_model_capacity_fit.png")
     plt.savefig(output_fig, dpi=300)
     plt.close()
     print(f"Saved: {output_fig}")
@@ -154,7 +165,7 @@ def plot_phase5_figures():
     axes[2].grid(True, alpha=0.3, axis="y")
 
     plt.tight_layout()
-    output_fig = "graphs/graph9_model_capacity_schedule_comparison.png"
+    output_fig = os.path.join(DIR_GRAPHS, "graph9_model_capacity_schedule_comparison.png")
     plt.savefig(output_fig, dpi=300)
     plt.close()
     print(f"Saved: {output_fig}")

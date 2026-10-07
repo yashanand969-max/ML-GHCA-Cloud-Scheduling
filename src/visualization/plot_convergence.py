@@ -5,14 +5,27 @@
 # Run this AFTER updating genetic_algorithm.py
 # ============================================================
 
-import matplotlib.pyplot as plt
 import os
+import sys
+from pathlib import Path
+import matplotlib.pyplot as plt
 
-from scheduler import generate_problem, combined_cost
-from genetic_algorithm import genetic_algorithm
-from ml_layer import train_model, ml_sort
+# Add project root to sys.path
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
-os.makedirs("graphs", exist_ok=True)
+DIR_GRAPHS = os.path.join(PROJECT_ROOT, "graphs")
+os.makedirs(DIR_GRAPHS, exist_ok=True)
+
+try:
+    from src.core.scheduler import generate_problem, combined_cost
+    from src.core.genetic_algorithm import genetic_algorithm
+    from src.ml.ml_layer import train_model, ml_sort
+except ImportError:
+    from scheduler import generate_problem, combined_cost
+    from genetic_algorithm import genetic_algorithm
+    from ml_layer import train_model, ml_sort
 
 
 def run_ghca_with_convergence(ops):
@@ -89,7 +102,7 @@ def plot_convergence():
     ax.grid(True, alpha=0.3)
 
     plt.tight_layout()
-    plt.savefig("graphs/graph5_convergence.png", dpi=150)
+    plt.savefig(os.path.join(DIR_GRAPHS, "graph5_convergence.png"), dpi=150)
     plt.close()
 
     print("\nGraph 5 saved — graphs/graph5_convergence.png")

@@ -8,9 +8,21 @@
 # ============================================================
 
 import time
+import sys
+from pathlib import Path
 import numpy as np
-from scheduler import generate_problem, combined_cost, calculate_oct, calculate_load_balance
-from genetic_algorithm import genetic_algorithm, genetic_algorithm_surrogate
+
+# Add project root to sys.path
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+try:
+    from src.core.scheduler import generate_problem, combined_cost, calculate_oct, calculate_load_balance
+    from src.core.genetic_algorithm import genetic_algorithm, genetic_algorithm_surrogate
+except ImportError:
+    from scheduler import generate_problem, combined_cost, calculate_oct, calculate_load_balance
+    from genetic_algorithm import genetic_algorithm, genetic_algorithm_surrogate
 
 
 def run_generation_scaling_ablation():

@@ -23,12 +23,16 @@ import csv
 import numpy as np
 from scipy import stats
 import os
+import sys
+from pathlib import Path
 
-CSV_PATH = "dataset/benchmarks/benchmark_results.csv"
-if not os.path.exists(CSV_PATH):
-    CSV_PATH = "results/benchmark_results.csv"
+# Add project root to sys.path
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
-OUTPUT_SUMMARY_CSV = "dataset/benchmarks/dual_scale_summary.csv"
+CSV_PATH = os.path.join(PROJECT_ROOT, "dataset", "benchmarks", "benchmark_results.csv")
+OUTPUT_SUMMARY_CSV = os.path.join(PROJECT_ROOT, "dataset", "benchmarks", "dual_scale_summary.csv")
 
 
 def rank_biserial_correlation(x, y):
